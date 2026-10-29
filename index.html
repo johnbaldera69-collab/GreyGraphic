@@ -174,7 +174,10 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
 .datos dd{margin:0;font:600 .95rem/1.25 var(--f-display);color:var(--hielo)}
 .datos dd.tools{display:flex;flex-wrap:wrap;gap:6px}
 .datos dd.tools span{white-space:nowrap;font:500 .8rem/1 var(--f-texto);border:1px solid var(--linea);border-radius:6px;padding:6px 8px;background:var(--superficie)}
-.datos dd.num{font-size:1.7rem;line-height:1;background:var(--luz);-webkit-background-clip:text;background-clip:text;color:transparent}
+.datos .exp{display:flex;flex-direction:column}
+.datos dd.num b{display:block;font:700 clamp(3.4rem,2.6rem + 3vw,4.6rem)/.9 var(--f-display);letter-spacing:-.03em;background:var(--luz);-webkit-background-clip:text;background-clip:text;color:transparent;padding:.04em .04em .06em 0}
+.datos dd.num span{display:block;font:600 1.15rem/1.2 var(--f-display);color:var(--hielo);-webkit-text-fill-color:var(--hielo);margin-top:4px}
+.datos dd.num{flex:1;display:flex;flex-direction:column;justify-content:center;font-size:1.7rem;line-height:1;background:var(--luz);-webkit-background-clip:text;background-clip:text;color:transparent}
 .sobre-texto h3{font:600 .8rem/1 var(--f-texto);letter-spacing:.14em;text-transform:uppercase;color:var(--hielo);margin:0 0 12px}
 .areas2{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0 0 26px;padding:0}
 .areas2 li{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--hielo);border:1px solid var(--linea);border-radius:999px;padding:7px 14px 7px 8px;background:rgba(19,22,58,.55)}
@@ -467,7 +470,7 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
         <h2 id="sobre-titulo">El diseño va más allá de lo <em>estético</em>.</h2>
         <p>Entiendo el diseño como algo que va más allá de lo estético. Cada proyecto tiene una intención, una historia y una necesidad que merece ser comprendida antes de convertirse en una pieza visual. Por eso, mi enfoque combina creatividad, criterio visual y atención al detalle para desarrollar trabajos que respondan a un propósito y tengan una identidad propia.</p>
         <dl class="datos">
-          <div><dt>Experiencia</dt><dd class="num">+6 años</dd></div>
+          <div class="exp"><dt>Experiencia</dt><dd class="num"><b>+6</b><span>años</span></dd></div>
           <div><dt>Herramientas</dt><dd class="tools"><span>Photoshop</span><span>Illustrator</span><span>Premiere</span><span>After Effects</span></dd></div>
         </dl>
         <h3>Mi enfoque</h3>
@@ -482,7 +485,7 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
 <section class="habil" id="habilidades" aria-labelledby="habil-titulo">
   <div class="wrap">
     <div class="habil-cab">
-      <h2 id="habil-titulo">Habilidades con <em>identidad</em> propia.</h2>
+      <h2 id="habil-titulo">Habilidades con <em>identidad</em> propia</h2>
       <p>Cada área es una forma distinta de comunicar una idea a través del diseño.</p>
     </div>
     <ul class="muestrario">
@@ -500,7 +503,7 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
 <section class="trab" id="trabajos" aria-labelledby="trab-titulo">
   <div class="wrap">
     <div class="trab-cab">
-      <div><p class="ceja2">Trabajos</p><h2 id="trab-titulo">Piezas que encontraron su forma.</h2></div>
+      <div><p class="ceja2">Trabajos</p><h2 id="trab-titulo">Piezas que encontraron su forma</h2></div>
       <div class="pestanas" role="tablist" aria-label="Tipo de trabajo">
         <button type="button" role="tab" id="tab-diseno" aria-controls="panel-diseno" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="7" width="12" height="12" rx="1.5"/><path d="M7 7V4.5A1.5 1.5 0 0 1 8.5 3h11A1.5 1.5 0 0 1 21 4.5v11a1.5 1.5 0 0 1-1.5 1.5H15"/></svg><span class="lg">Diseño y fotomontaje</span><span class="sm">Diseño</span></button>
         <button type="button" role="tab" id="tab-video" aria-controls="panel-video" aria-selected="false" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="5" width="18" height="12" rx="1.5"/><path d="m10 8.5 4.5 2.5-4.5 2.5v-5Z"/></svg><span class="lg">Edición de video</span><span class="sm">Videos</span></button>
@@ -563,7 +566,7 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
   <div class="wrap">
     <div class="contacto-cab">
       <p class="ceja2">Contacto</p>
-      <h2 id="contacto-titulo">Hablemos de tu <em>proyecto</em>.</h2>
+      <h2 id="contacto-titulo">Hablemos de tu <em>proyecto</em></h2>
       <p>Cuéntame tu idea y encontremos juntos la forma de expresarla. Escríbeme por el medio que prefieras.</p>
     </div>
     <ul class="renglones">
