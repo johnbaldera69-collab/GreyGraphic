@@ -202,9 +202,9 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
 }
 /* Sobre mí: el círculo se completa y en ese instante sale la foto */
 .js .sobre.espera #anilloS{stroke-dasharray:100 100;stroke-dashoffset:100}
-.js .sobre.espera .retrato{opacity:0}
+.js .sobre.espera .retrato{opacity:0;filter:blur(16px);transform:scale(1.02)}
 .js .sobre.activa #anilloS{stroke-dasharray:100 100;stroke-dashoffset:0;transition:stroke-dashoffset 1.3s cubic-bezier(.65,.05,.25,1)}
-.js .sobre.activa .retrato{opacity:1;transition:opacity .7s ease 1.25s}
+.js .sobre.activa .retrato{opacity:1;filter:blur(0);transform:none;transition:opacity .9s ease 1.25s,filter .9s ease 1.25s,transform .9s ease 1.25s}
 .js .sobre.activa .retrato img{animation:destello 1.2s ease-out 1.25s both}
 @keyframes destello{from{filter:brightness(1.9)}to{filter:brightness(1)}}
 .sobre .haz.pasa{animation:pasaLuz 1.2s cubic-bezier(.45,0,.35,1) 1.2s both}
@@ -633,21 +633,21 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
     var largo=trazarConector();
     var EL='cubic-bezier(.65,.05,.25,1)', EX='cubic-bezier(.16,1,.3,1)';
     root.classList.remove('intro-on');
-    cada('[data-in="nav"]',[{opacity:0},{opacity:1}],{duration:500},60);
-    cada('#titular .l > .li',[{transform:'translateY(110%)'},{transform:'translateY(0)'}],{duration:950,delay:100,easing:EX},120);
-    cada('[data-in="corte"]',[{opacity:0,transform:'scale(.2)'},{opacity:1,transform:'scale(1)'}],{duration:500,delay:200,easing:'cubic-bezier(.34,1.8,.64,1)'},70);
-    cada('[data-in="deco"]',[{opacity:0},{opacity:1}],{duration:1000,delay:400});
+    cada('[data-in="nav"]',[{opacity:0,filter:'blur(6px)'},{opacity:1,filter:'blur(0px)'}],{duration:500},60);
+    cada('#titular .l > .li',[{transform:'translateY(110%)',filter:'blur(10px)'},{transform:'translateY(0)',filter:'blur(0px)'}],{duration:950,delay:100,easing:EX},120);
+    cada('[data-in="corte"]',[{opacity:0,transform:'scale(.2)',filter:'blur(4px)'},{opacity:1,transform:'scale(1)',filter:'blur(0px)'}],{duration:500,delay:200,easing:'cubic-bezier(.34,1.8,.64,1)'},70);
+    cada('[data-in="deco"]',[{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)'}],{duration:1000,delay:400});
     /* la luz de estudio se enciende */
     /* 1) el círculo se dibuja completo */
     anim($('#anilloC'),[{strokeDasharray:'100 100',strokeDashoffset:100},{strokeDasharray:'100 100',strokeDashoffset:0}],{duration:1300,delay:250,easing:EL});
     /* 2) al cerrarse, sale la foto con la luz de estudio */
-    cada('#inicio .retrato',[{opacity:0},{opacity:1}],{duration:650,delay:1550,easing:'ease-out'});
+    cada('#inicio .retrato',[{opacity:0,filter:'blur(16px)',transform:'scale(1.02)'},{opacity:1,filter:'blur(0px)',transform:'none'}],{duration:900,delay:1550,easing:'ease-out'});
     anim($('#haz'),[{transform:'translateX(-130%) skewX(-14deg)',opacity:0},{opacity:1,offset:.12},{opacity:1,offset:.8},{transform:'translateX(290%) skewX(-14deg)',opacity:0}],{duration:1150,delay:1500,easing:'cubic-bezier(.45,0,.35,1)'});
     cada('#inicio .retrato img',[{filter:'brightness(1.9)'},{filter:'brightness(1)'}],{duration:1200,delay:1550,easing:'ease-out'});
-    cada('[data-in="txt"]',[{opacity:0,transform:'translateY(14px)'},{opacity:1,transform:'none'}],{duration:700,delay:600},100);
+    cada('[data-in="txt"]',[{opacity:0,transform:'translateY(14px)',filter:'blur(8px)'},{opacity:1,transform:'none',filter:'blur(0px)'}],{duration:700,delay:600},100);
     /* el anillo se dibuja y su trazo llega hasta el botón */
     anim($('#conPath'),[{strokeDasharray:largo+' '+largo,strokeDashoffset:largo},{strokeDasharray:largo+' '+largo,strokeDashoffset:0}],{duration:900,delay:1900,easing:'cubic-bezier(.55,0,.75,.4)'});
-    anim($('[data-in="chip"]'),[{opacity:0,transform:'translateY(16px)'},{opacity:1,transform:'none'}],{duration:650,delay:2100,easing:'cubic-bezier(.34,1.5,.64,1)'});
+    anim($('[data-in="chip"]'),[{opacity:0,transform:'translateY(16px)',filter:'blur(8px)'},{opacity:1,transform:'none',filter:'blur(0px)'}],{duration:650,delay:2100,easing:'cubic-bezier(.34,1.5,.64,1)'});
   }
   function suave(){ /* versión sin desplazamientos para "Reducir movimiento" */
     limpiar(); trazarConector(); fin();
@@ -677,7 +677,7 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
       var el;
       if(p.dataset.video){ img.hidden=true; img.removeAttribute('src'); vid.hidden=false; vid.src=p.dataset.video; vid.poster=p.querySelector('img').src; var pr=vid.play(); if(pr&&pr.catch)pr.catch(function(){}); el=vid; }
       else { vid.pause(); vid.hidden=true; vid.removeAttribute('src'); img.hidden=false; img.src=p.dataset.full; img.alt=p.dataset.marca+' '+p.dataset.titulo; el=img; }
-      if(el.animate&&!mqReduce.matches) el.animate([{opacity:0,transform:'scale(.97)'},{opacity:1,transform:'none'}],{duration:350,easing:'cubic-bezier(.2,.7,.1,1)'}); }
+      if(el.animate&&!mqReduce.matches) el.animate([{opacity:0,transform:'scale(.97)',filter:'blur(10px)'},{opacity:1,transform:'none',filter:'blur(0px)'}],{duration:450,easing:'cubic-bezier(.2,.7,.1,1)'}); }
     function abrir(p){ lista=[].slice.call(p.closest('.panel').querySelectorAll('.pieza')); origen=document.activeElement; mostrar(lista.indexOf(p)); visor.hidden=false; document.body.style.overflow='hidden'; document.getElementById('visor-cerrar').focus(); }
     function cerrar(){ vid.pause(); vid.removeAttribute('src'); vid.load(); visor.hidden=true; document.body.style.overflow=''; if(origen)origen.focus(); }
     [].slice.call(document.querySelectorAll('.pieza')).forEach(function(p){ p.addEventListener('click',function(){abrir(p)}); });
@@ -714,8 +714,8 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
       sec.classList.add('rev-espera');
       var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(!e.isIntersecting) return; io.disconnect();
         var li=sec.querySelector('.rev-h .li');
-        if(li) li.animate([{transform:'translateY(110%)'},{transform:'translateY(0)'}],{duration:950,delay:100,easing:'cubic-bezier(.16,1,.3,1)',fill:'both'});
-        els.forEach(function(el,i){ el.animate([{opacity:0,transform:'translateY(14px)'},{opacity:1,transform:'none'}],{duration:700,delay:350+i*90,easing:'cubic-bezier(.2,.7,.1,1)',fill:'backwards'}); });
+        if(li) li.animate([{transform:'translateY(110%)',filter:'blur(10px)'},{transform:'translateY(0)',filter:'blur(0px)'}],{duration:950,delay:100,easing:'cubic-bezier(.16,1,.3,1)',fill:'both'});
+        els.forEach(function(el,i){ el.animate([{opacity:0,transform:'translateY(14px)',filter:'blur(8px)'},{opacity:1,transform:'none',filter:'blur(0px)'}],{duration:700,delay:350+i*90,easing:'cubic-bezier(.2,.7,.1,1)',fill:'backwards'}); });
         sec.classList.remove('rev-espera');
       }); },{threshold:.2});
       io.observe(sec);
