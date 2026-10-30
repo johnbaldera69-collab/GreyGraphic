@@ -194,7 +194,7 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
 .sobre-texto h2{font:600 clamp(1.9rem,1.3rem + 2.6vw,3.2rem)/1.08 var(--f-display);letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance}
 .sobre-texto h2 em{font:400 1.12em/1 var(--f-acento);font-style:italic;background:var(--luz);-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.05em}
 .sobre-texto > p{margin:0 0 24px;color:var(--lavanda);max-width:58ch}
-.datos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;margin:0 0 26px;background:var(--linea);border:1px solid var(--linea);border-radius:var(--radio);overflow:hidden}
+.datos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;margin:0;background:var(--linea);border:1px solid var(--linea);border-radius:var(--radio);overflow:hidden}
 .datos div{background:var(--medianoche);padding:14px 12px;min-width:0}
 .datos dt{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--lavanda);margin-bottom:6px}
 .datos dd{margin:0;font:600 .95rem/1.25 var(--f-display);color:var(--hielo)}
@@ -509,8 +509,6 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
           <div class="exp"><dt>Experiencia</dt><dd class="num"><b>+6</b><span>años</span></dd></div>
           <div><dt>Herramientas</dt><dd class="tools"><span>Photoshop</span><span>Illustrator</span><span>Premiere</span><span>After Effects</span></dd></div>
         </dl>
-        <h3>Mi enfoque</h3>
-        <ul class="enfoque" style="margin-bottom:0"><li>Creatividad</li><li>Criterio visual</li><li>Atención al detalle</li></ul>
       </div>
     </div>
   </div>
@@ -774,7 +772,7 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
   /* textos de las secciones: suben desde una máscara y se desvanecen como en la portada */
   function textosSecciones(){
     if(mqReduce.matches||!('IntersectionObserver' in window)||!Element.prototype.animate) return;
-    var grupos={'sobre-mi':'.sobre-texto .ceja, .sobre-texto > p, .datos, .sobre-texto h3, .enfoque',
+    var grupos={'sobre-mi':'.sobre-texto .ceja, .sobre-texto > p, .datos',
       'habilidades':'.habil-cab p, .muestra',
       'trabajos':'.trab-cab .ceja2, .pestanas, .panel:not([hidden]) .pieza',
       'contacto':'.contacto-cab .ceja2, .contacto-cab p, .renglon, .pie-sitio'};
