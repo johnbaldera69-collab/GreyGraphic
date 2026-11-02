@@ -432,6 +432,43 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}
 }
+
+/* ================= BOTONES LIQUID GLASS ================= */
+:root{--vidrio-borde:rgba(255,255,255,.22);--vidrio-luz:rgba(255,255,255,.42)}
+.btn,.pestanas,.pieza .abrir,.visor button{
+  isolation:isolate;overflow:hidden;border-radius:999px;
+  -webkit-backdrop-filter:blur(14px) saturate(170%);backdrop-filter:blur(14px) saturate(170%);
+  border:1px solid var(--vidrio-borde);
+  box-shadow:inset 0 1px 0 var(--vidrio-luz),inset 0 -1px 0 rgba(255,255,255,.06),inset 0 0 22px rgba(255,255,255,.06),0 10px 28px -14px rgba(0,0,0,.7);
+  transition:transform .35s var(--ease-sale),box-shadow .35s,background-color .35s,border-color .35s}
+/* reflejo superior */
+.btn::before,.pestanas button::before,.pieza .abrir::before,.visor button::before{content:"";position:absolute;z-index:-1;left:6%;right:6%;top:1px;height:52%;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.34),rgba(255,255,255,.04));pointer-events:none}
+/* destello que sigue al mouse */
+.btn::after,.pestanas button::after,.pieza .abrir::after,.visor button::after{content:"";position:absolute;z-index:-1;inset:0;border-radius:inherit;background:radial-gradient(120px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.32),transparent 60%);opacity:0;transition:opacity .35s;pointer-events:none}
+@media(hover:hover){.btn:hover::after,.pestanas button:hover::after,.pieza:hover .abrir::after,.visor button:hover::after{opacity:1}
+  .btn:hover{transform:translateY(-1px) scale(1.025)}}
+.btn:active,.pestanas button:active,.visor button:active{transform:scale(.96)}
+/* principal: vidrio teñido azul-violeta */
+.btn-cta{color:#fff;background:linear-gradient(135deg,rgba(76,104,255,.72),rgba(124,84,255,.68));border-color:rgba(200,195,255,.42);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -2px 6px rgba(40,20,140,.35),inset 0 0 24px rgba(255,255,255,.10),0 14px 34px -12px rgba(90,80,255,.75)}
+.btn-cta:hover{background:linear-gradient(135deg,rgba(92,120,255,.8),rgba(140,100,255,.76))}
+/* secundario y menú: vidrio claro */
+.btn-ghost,.btn-sm{color:var(--hielo);background:rgba(255,255,255,.07)}
+.btn-ghost:hover,.btn-sm:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.34)}
+.btn-sm{border-color:rgba(170,160,255,.4);background:rgba(110,100,255,.12)}
+/* pestañas de Trabajos */
+.pestanas{background:rgba(255,255,255,.05);padding:5px}
+.pestanas button{position:relative;isolation:isolate;overflow:hidden;border-radius:999px;border:1px solid transparent}
+.pestanas button::before{opacity:0}
+.pestanas button[aria-selected="true"]{background:linear-gradient(135deg,rgba(76,104,255,.72),rgba(124,84,255,.68));border-color:rgba(200,195,255,.42);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -2px 6px rgba(40,20,140,.35),0 8px 24px -10px rgba(90,80,255,.8)}
+.pestanas button[aria-selected="true"]::before{opacity:1}
+/* círculos (abrir trabajo, visor) */
+.pieza .abrir,.visor button{position:relative;background:rgba(255,255,255,.07)}
+.pieza:hover .abrir{background:linear-gradient(135deg,rgba(76,104,255,.72),rgba(124,84,255,.68));border-color:rgba(200,195,255,.42)}
+.visor button:hover{background:rgba(255,255,255,.14)}
+/* teléfonos: un desenfoque más ligero para que todo vaya fluido */
+@media (max-width:899px),(pointer:coarse){.btn,.pestanas,.pieza .abrir,.visor button{-webkit-backdrop-filter:blur(8px) saturate(150%);backdrop-filter:blur(8px) saturate(150%)}}
+@media (prefers-reduced-motion:reduce){.btn:hover{transform:none}}
 </style>
 </head>
 <body>
@@ -791,7 +828,17 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
       io.observe(sec);
     });
   }
+  /* botones liquid glass: el destello sigue al puntero */
+  function vidrio(){
+    if(!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    document.addEventListener('pointermove',function(e){
+      var b=e.target.closest&&e.target.closest('.btn, .pestanas button, .visor button, .pieza'); if(!b) return;
+      if(b.classList.contains('pieza')) b=b.querySelector('.abrir'); if(!b) return;
+      var r=b.getBoundingClientRect(); b.style.setProperty('--mx',(e.clientX-r.left)+'px'); b.style.setProperty('--my',(e.clientY-r.top)+'px');
+    },{passive:true});
+  }
   document.addEventListener('DOMContentLoaded',function(){
+    vidrio();
     textosSecciones();
     contacto();
     trabajos();
