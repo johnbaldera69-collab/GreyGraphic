@@ -326,6 +326,7 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
 @media(hover:hover){.carrusel .pieza[data-pos="1"]:hover,.carrusel .pieza[data-pos="-1"]:hover{filter:brightness(.8)}}
 .carrusel .marco-img{margin:0;border-radius:0;aspect-ratio:4/5;display:block}
 .carrusel .marco-img img{width:100%;height:100%;object-fit:cover;-webkit-user-drag:none;pointer-events:none}
+.carrusel .marco-img .play,.carrusel .marco-img .dur{pointer-events:none}
 .trab{overflow-x:clip}
 .carrusel .pieza .corte{display:none}
 .carrusel .pie{position:absolute;left:10px;right:10px;bottom:10px;padding:12px 12px 12px 16px;border-radius:18px;background:rgba(10,12,35,.45);-webkit-backdrop-filter:blur(16px) saturate(160%);backdrop-filter:blur(16px) saturate(160%);border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
@@ -468,42 +469,52 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
   *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}
 }
 
-/* ================= BOTONES LIQUID GLASS ================= */
-:root{--vidrio-borde:rgba(255,255,255,.22);--vidrio-luz:rgba(255,255,255,.42)}
-.btn,.pestanas,.pieza .abrir,.visor button{
-  isolation:isolate;overflow:hidden;border-radius:999px;
-  -webkit-backdrop-filter:blur(14px) saturate(170%);backdrop-filter:blur(14px) saturate(170%);
-  border:1px solid var(--vidrio-borde);
-  box-shadow:inset 0 1px 0 var(--vidrio-luz),inset 0 -1px 0 rgba(255,255,255,.06),inset 0 0 22px rgba(255,255,255,.06),0 10px 28px -14px rgba(0,0,0,.7);
-  transition:transform .35s var(--ease-sale),box-shadow .35s,background-color .35s,border-color .35s}
-/* reflejo superior */
-.btn::before,.pestanas button::before,.pieza .abrir::before,.visor button::before{content:"";position:absolute;z-index:-1;left:6%;right:6%;top:1px;height:52%;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.34),rgba(255,255,255,.04));pointer-events:none}
-/* destello que sigue al mouse */
-.btn::after,.pestanas button::after,.pieza .abrir::after,.visor button::after{content:"";position:absolute;z-index:-1;inset:0;border-radius:inherit;background:radial-gradient(120px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.32),transparent 60%);opacity:0;transition:opacity .35s;pointer-events:none}
-@media(hover:hover){.btn:hover::after,.pestanas button:hover::after,.pieza:hover .abrir::after,.visor button:hover::after{opacity:1}
-  .btn:hover{transform:translateY(-1px) scale(1.025)}}
-.btn:active,.pestanas button:active,.visor button:active{transform:scale(.96)}
-/* principal: vidrio teñido azul-violeta */
-.btn-cta{color:#fff;background:linear-gradient(135deg,rgba(76,104,255,.72),rgba(124,84,255,.68));border-color:rgba(200,195,255,.42);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -2px 6px rgba(40,20,140,.35),inset 0 0 24px rgba(255,255,255,.10),0 14px 34px -12px rgba(90,80,255,.75)}
-.btn-cta:hover{background:linear-gradient(135deg,rgba(92,120,255,.8),rgba(140,100,255,.76))}
-/* secundario y menú: vidrio claro */
-.btn-ghost,.btn-sm{color:var(--hielo);background:rgba(255,255,255,.07)}
-.btn-ghost:hover,.btn-sm:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.34)}
-.btn-sm{border-color:rgba(170,160,255,.4);background:rgba(110,100,255,.12)}
-/* pestañas de Trabajos */
-.pestanas{background:rgba(255,255,255,.05);padding:5px}
-.pestanas button{position:relative;isolation:isolate;overflow:hidden;border-radius:999px;border:1px solid transparent}
-.pestanas button::before{opacity:0}
-.pestanas button[aria-selected="true"]{background:linear-gradient(135deg,rgba(76,104,255,.72),rgba(124,84,255,.68));border-color:rgba(200,195,255,.42);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -2px 6px rgba(40,20,140,.35),0 8px 24px -10px rgba(90,80,255,.8)}
-.pestanas button[aria-selected="true"]::before{opacity:1}
-/* círculos (abrir trabajo, visor) */
-.pieza .abrir,.visor button{position:relative;background:rgba(255,255,255,.07)}
-.pieza:hover .abrir{background:linear-gradient(135deg,rgba(76,104,255,.72),rgba(124,84,255,.68));border-color:rgba(200,195,255,.42)}
-.visor button:hover{background:rgba(255,255,255,.14)}
-/* teléfonos: un desenfoque más ligero para que todo vaya fluido */
-@media (max-width:899px),(pointer:coarse){.btn,.pestanas,.pieza .abrir,.visor button{-webkit-backdrop-filter:blur(8px) saturate(150%);backdrop-filter:blur(8px) saturate(150%)}}
-@media (prefers-reduced-motion:reduce){.btn:hover{transform:none}}
+/* ================= LIQUID GLASS (estilo iOS) ================= */
+.btn,.pestanas button,.pieza .abrir,.visor button,.car-btn{
+  --g-fill:rgba(255,255,255,.07);--g-tint:rgba(0,0,0,0);
+  position:relative;isolation:isolate;overflow:hidden;border:0;border-radius:999px;color:#F5F6FF;font-weight:600;letter-spacing:-.005em;
+  background:linear-gradient(var(--g-tint),var(--g-tint)),var(--g-fill);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.20),inset 0 -1px 1px rgba(0,0,0,.20),0 1px 2px rgba(0,0,0,.25),0 12px 30px -14px rgba(0,0,0,.6);
+  transition:transform .55s cubic-bezier(.34,1.56,.64,1),background-color .3s,box-shadow .3s}
+/* borde de luz: más claro arriba a la izquierda, como el vidrio real */
+.btn::before,.pestanas button::before,.pieza .abrir::before,.visor button::before,.car-btn::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;padding:1px;pointer-events:none;
+  background:linear-gradient(140deg,rgba(255,255,255,.55),rgba(255,255,255,.12) 32%,rgba(255,255,255,.03) 58%,rgba(255,255,255,.26));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+/* luz suave que sigue al puntero */
+.btn::after,.pestanas button::after,.pieza .abrir::after,.visor button::after,.car-btn::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;background:radial-gradient(110px circle at var(--mx,50%) var(--my,-30%),rgba(255,255,255,.16),transparent 70%);opacity:0;transition:opacity .35s}
+@media(hover:hover){
+  .btn:hover,.pestanas button:hover,.visor button:hover,.car-btn:hover,.pieza:hover .abrir{--g-fill:rgba(255,255,255,.12)}
+  .btn:hover::after,.pestanas button:hover::after,.visor button:hover::after,.car-btn:hover::after,.pieza:hover .abrir::after{opacity:1}
+}
+.btn:active,.pestanas button:active,.visor button:active,.car-btn:active{transform:scale(.95)}
+.btn:focus-visible,.car-btn:focus-visible,.pestanas button:focus-visible,.visor button:focus-visible{outline:2px solid rgba(170,160,255,.9);outline-offset:3px}
+/* acción principal: vidrio teñido con el violeta de la marca */
+.btn-cta,.pestanas button[aria-selected="true"]{--g-tint:rgba(96,88,255,.55);box-shadow:inset 0 1px 1px rgba(255,255,255,.30),inset 0 -1px 1px rgba(20,10,90,.35),0 1px 2px rgba(0,0,0,.25),0 14px 34px -14px rgba(96,88,255,.85)}
+@media(hover:hover){.btn-cta:hover{--g-tint:rgba(110,100,255,.66)}}
+.btn{min-height:50px;padding:0 24px}
+.btn-sm{min-height:44px;padding:0 18px}
+.btn-cta:hover svg{transform:translateX(3px)}
+/* pestañas de Trabajos: sin contorno exterior, cada una es su propia píldora de vidrio */
+.pestanas{display:flex;gap:10px;padding:0;border:0;border-radius:0;background:none;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;overflow:visible}
+.pestanas button{min-height:46px;padding:0 18px;color:rgba(235,237,255,.78)}
+.pestanas button[aria-selected="true"]{color:#fff}
+@media(max-width:520px){.pestanas{gap:6px}.pestanas button{padding:0 10px}}
+/* círculos */
+.pieza .abrir,.visor button,.car-btn{display:grid;place-items:center}
+.pieza .abrir{width:44px;height:44px}
+.car-btn{width:48px;height:48px;padding:0}
+/* teléfonos: desenfoque más ligero */
+@media (max-width:899px),(pointer:coarse){.btn,.pestanas button,.pieza .abrir,.visor button,.car-btn{-webkit-backdrop-filter:blur(12px) saturate(160%);backdrop-filter:blur(12px) saturate(160%)}}
+@media (prefers-reduced-motion:reduce){.btn,.pestanas button,.pieza .abrir,.visor button,.car-btn{transition:background-color .2s}}
+
+/* ================= CARRUSELES (video y social) ================= */
+.carrusel .pieza .marco-img,.carrusel .pieza.ancho .marco-img,.carrusel .pieza.vert .marco-img{aspect-ratio:4/5;margin:0;border-radius:0}
+.carrusel .pieza.vid .dur{top:14px;right:14px;bottom:auto}
+.carrusel .pieza.vid .play{margin-top:-56px}
+.carrusel .pieza .mosaico,.carrusel .pieza .mosaico.m4{display:grid;grid-template-columns:repeat(var(--n,4),minmax(0,1fr));grid-template-rows:1fr 3.4fr;grid-auto-rows:auto;gap:6px;padding:6px;background:#05060f}
+.carrusel .pieza .mosaico img,.carrusel .pieza .mosaico.m4 img{grid-row:1;grid-column:auto;aspect-ratio:auto;height:100%;width:100%;object-fit:cover;border-radius:6px}
+.carrusel .pieza .mosaico img:first-child,.carrusel .pieza .mosaico.m4 img:first-child{grid-row:2;grid-column:1/-1;aspect-ratio:auto}
 </style>
 </head>
 <body>
@@ -619,7 +630,7 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
 
     <div class="panel" id="panel-diseno" role="tabpanel" aria-labelledby="tab-diseno">
       <h3 class="sr-js">Diseño y fotomontaje</h3>
-      <div class="carrusel" id="carrusel" aria-roledescription="carrusel" aria-label="Trabajos de diseño y fotomontaje">
+      <div class="carrusel" aria-roledescription="carrusel" aria-label="Trabajos de diseño y fotomontaje">
         <button type="button" class="pieza c-car" data-full="img/gatorade-zero.webp" data-marca="Gatorade" data-titulo="Zero 2025" aria-label="Ver Gatorade Zero 2025 en grande"><span class="corte c-tl" aria-hidden="true"></span><span class="corte c-tr" aria-hidden="true"></span><span class="corte c-bl" aria-hidden="true"></span><span class="corte c-br" aria-hidden="true"></span>
           <span class="marco-img"><img src="img/gatorade-zero-mini.webp" alt="Gatorade Zero 2025, publicidad de producto · fotomontaje" width="900" height="756" loading="lazy" decoding="async"></span>
           <span class="pie"><span><span class="marca">Gatorade</span><span class="titulo">Zero 2025</span><span class="clase">Publicidad de producto · Fotomontaje</span></span><span class="abrir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></span>
@@ -634,54 +645,62 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
         </button>
       </div>
       <div class="car-ctrl">
-        <button type="button" class="car-btn" id="car-ant" aria-label="Trabajo anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
-        <div class="car-puntos" id="car-puntos"></div>
-        <button type="button" class="car-btn" id="car-sig" aria-label="Trabajo siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+        <button type="button" class="car-btn car-ant" aria-label="Trabajo anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <div class="car-puntos"></div>
+        <button type="button" class="car-btn car-sig" aria-label="Trabajo siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
       </div>
     </div>
 
     <div class="panel" id="panel-social" role="tabpanel" aria-labelledby="tab-social">
       <h3 class="sr-js">Social media</h3>
-      <div class="galeria-sm">
-        <button type="button" class="pieza proyecto" aria-label="Ver el proyecto de social media de Coloranmedia, 5 piezas"><span class="corte c-tl" aria-hidden="true"></span><span class="corte c-tr" aria-hidden="true"></span><span class="corte c-bl" aria-hidden="true"></span><span class="corte c-br" aria-hidden="true"></span>
+      <div class="carrusel" aria-roledescription="carrusel" aria-label="Proyectos de social media">
+        <button type="button" class="pieza proyecto c-car" aria-label="Ver el proyecto de social media de Coloranmedia, 5 piezas"><span class="corte c-tl" aria-hidden="true"></span><span class="corte c-tr" aria-hidden="true"></span><span class="corte c-bl" aria-hidden="true"></span><span class="corte c-br" aria-hidden="true"></span>
           <span class="marco-img mosaico"><img src="img/sm-1-mini.webp" alt="" width="480" height="587" loading="lazy" decoding="async"><img src="img/sm-2-mini.webp" alt="" width="480" height="587" loading="lazy" decoding="async"><img src="img/sm-3-mini.webp" alt="" width="480" height="587" loading="lazy" decoding="async"><img src="img/sm-4-mini.webp" alt="" width="480" height="587" loading="lazy" decoding="async"><img src="img/sm-5-mini.webp" alt="" width="480" height="587" loading="lazy" decoding="async"></span>
           <span class="pie"><span><span class="marca">Coloranmedia</span><span class="titulo">Social media · Agencia digital</span><span class="clase">Campaña de contenido para redes · 5 piezas</span></span><span class="abrir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></span>
           <span class="c-item" hidden data-full="img/sm-1.webp" data-marca="Coloranmedia · Social media · 1 de 5" data-titulo="¿Cuál es el mayor desafío de tu marca?"></span><span class="c-item" hidden data-full="img/sm-2.webp" data-marca="Coloranmedia · Social media · 2 de 5" data-titulo="Sin estrategia, cualquier camino parece correcto"></span><span class="c-item" hidden data-full="img/sm-3.webp" data-marca="Coloranmedia · Social media · 3 de 5" data-titulo="No dejes que la IA publique por ti"></span><span class="c-item" hidden data-full="img/sm-4.webp" data-marca="Coloranmedia · Social media · 4 de 5" data-titulo="Frena tu contenido sin valor"></span><span class="c-item" hidden data-full="img/sm-5.webp" data-marca="Coloranmedia · Social media · 5 de 5" data-titulo="Explora más allá de lo automático"></span>
         </button>
-        <button type="button" class="pieza proyecto" aria-label="Ver el proyecto de social media de Urbanización La Hacienda, 5 piezas"><span class="corte c-tl" aria-hidden="true"></span><span class="corte c-tr" aria-hidden="true"></span><span class="corte c-bl" aria-hidden="true"></span><span class="corte c-br" aria-hidden="true"></span>
+        <button type="button" class="pieza proyecto c-car" aria-label="Ver el proyecto de social media de Urbanización La Hacienda, 5 piezas"><span class="corte c-tl" aria-hidden="true"></span><span class="corte c-tr" aria-hidden="true"></span><span class="corte c-bl" aria-hidden="true"></span><span class="corte c-br" aria-hidden="true"></span>
           <span class="marco-img mosaico" style="--ar:1/1"><img src="img/uh-1-mini.webp" alt="" width="480" height="480" loading="lazy" decoding="async"><img src="img/uh-2-mini.webp" alt="" width="480" height="480" loading="lazy" decoding="async"><img src="img/uh-3-mini.webp" alt="" width="480" height="480" loading="lazy" decoding="async"><img src="img/uh-4-mini.webp" alt="" width="480" height="480" loading="lazy" decoding="async"><img src="img/uh-5-mini.webp" alt="" width="480" height="480" loading="lazy" decoding="async"></span>
           <span class="pie"><span><span class="marca">Urbanización La Hacienda</span><span class="titulo">Social media · Proyecto inmobiliario</span><span class="clase">Campaña de contenido para redes · 5 piezas</span></span><span class="abrir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></span>
           <span class="c-item" hidden data-full="img/uh-1.webp" data-marca="Urbanización La Hacienda · Social media · 1 de 5" data-titulo="Nuestro proyecto te brinda control de acceso y seguridad"></span><span class="c-item" hidden data-full="img/uh-2.webp" data-marca="Urbanización La Hacienda · Social media · 2 de 5" data-titulo="Imagina despertar frente a un lago"></span><span class="c-item" hidden data-full="img/uh-3.webp" data-marca="Urbanización La Hacienda · Social media · 3 de 5" data-titulo="Beneficios de invertir"></span><span class="c-item" hidden data-full="img/uh-4.webp" data-marca="Urbanización La Hacienda · Social media · 4 de 5" data-titulo="El regalo perfecto para tu familia"></span><span class="c-item" hidden data-full="img/uh-5.webp" data-marca="Urbanización La Hacienda · Social media · 5 de 5" data-titulo="Antes de cerrar el año"></span>
         </button>
-        <button type="button" class="pieza proyecto" aria-label="Ver el proyecto de social media de Máximo Potencial, 4 piezas"><span class="corte c-tl" aria-hidden="true"></span><span class="corte c-tr" aria-hidden="true"></span><span class="corte c-bl" aria-hidden="true"></span><span class="corte c-br" aria-hidden="true"></span>
+        <button type="button" class="pieza proyecto c-car" aria-label="Ver el proyecto de social media de Máximo Potencial, 4 piezas"><span class="corte c-tl" aria-hidden="true"></span><span class="corte c-tr" aria-hidden="true"></span><span class="corte c-bl" aria-hidden="true"></span><span class="corte c-br" aria-hidden="true"></span>
           <span class="marco-img mosaico m4"><img src="img/mp-1-mini.webp" alt="" width="480" height="600" loading="lazy" decoding="async"><img src="img/mp-2-mini.webp" alt="" width="480" height="600" loading="lazy" decoding="async"><img src="img/mp-3-mini.webp" alt="" width="480" height="600" loading="lazy" decoding="async"><img src="img/mp-4-mini.webp" alt="" width="480" height="600" loading="lazy" decoding="async"></span>
           <span class="pie"><span><span class="marca">Máximo Potencial</span><span class="titulo">Social media · Centro educativo</span><span class="clase">Campaña de contenido para redes · 4 piezas</span></span><span class="abrir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></span>
           <span class="c-item" hidden data-full="img/mp-1.webp" data-marca="Máximo Potencial · Social media · 1 de 4" data-titulo="Feliz Navidad"></span><span class="c-item" hidden data-full="img/mp-2.webp" data-marca="Máximo Potencial · Social media · 2 de 4" data-titulo="A New Era Begins · Inscripciones abiertas"></span><span class="c-item" hidden data-full="img/mp-3.webp" data-marca="Máximo Potencial · Social media · 3 de 4" data-titulo="Los primeros años lo cambian todo"></span><span class="c-item" hidden data-full="img/mp-4.webp" data-marca="Máximo Potencial · Social media · 4 de 4" data-titulo="Calendar June"></span>
         </button>
       </div>
+      <div class="car-ctrl">
+        <button type="button" class="car-btn car-ant" aria-label="Proyecto anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <div class="car-puntos"></div>
+        <button type="button" class="car-btn car-sig" aria-label="Proyecto siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+      </div>
     </div>
 
     <div class="panel" id="panel-video" role="tabpanel" aria-labelledby="tab-video">
       <h3 class="sr-js">Edición de video</h3>
-      <div class="videos">
-        <button type="button" class="pieza vid ancho" data-video="video/maximo-potencial.mp4" data-marca="Máximo Potencial" data-titulo="Obra en desarrollo" aria-label="Reproducir Máximo Potencial Obra en desarrollo">
+      <div class="carrusel" aria-roledescription="carrusel" aria-label="Videos">
+        <button type="button" class="pieza vid ancho c-car" data-video="video/maximo-potencial.mp4" data-marca="Máximo Potencial" data-titulo="Obra en desarrollo" aria-label="Reproducir Máximo Potencial Obra en desarrollo">
           <span class="marco-img"><img src="img/poster-maximo-potencial.webp" alt="" width="960" height="540" loading="lazy" decoding="async"><span class="play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></span><span class="dur">1:26</span></span>
           <span class="pie"><span><span class="marca">Máximo Potencial</span><span class="titulo">Obra en desarrollo</span><span class="clase">Edición de video</span></span></span>
         </button>
-        <div class="verticales">
-        <button type="button" class="pieza vid vert" data-video="video/power-rider-san-cristobal.mp4" data-marca="Power Rider" data-titulo="San Cristóbal" aria-label="Reproducir Power Rider San Cristóbal">
+        <button type="button" class="pieza vid vert c-car" data-video="video/power-rider-san-cristobal.mp4" data-marca="Power Rider" data-titulo="San Cristóbal" aria-label="Reproducir Power Rider San Cristóbal">
           <span class="marco-img"><img src="img/poster-power-rider-san-cristobal.webp" alt="" width="540" height="960" loading="lazy" decoding="async"><span class="play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></span><span class="dur">0:37</span></span>
           <span class="pie"><span><span class="marca">Power Rider</span><span class="titulo">San Cristóbal</span><span class="clase">Edición de video</span></span></span>
         </button>
-        <button type="button" class="pieza vid vert" data-video="video/power-rider-punta-cana.mp4" data-marca="Power Rider" data-titulo="Punta Cana" aria-label="Reproducir Power Rider Punta Cana">
+        <button type="button" class="pieza vid vert c-car" data-video="video/power-rider-punta-cana.mp4" data-marca="Power Rider" data-titulo="Punta Cana" aria-label="Reproducir Power Rider Punta Cana">
           <span class="marco-img"><img src="img/poster-power-rider-punta-cana.webp" alt="" width="540" height="960" loading="lazy" decoding="async"><span class="play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></span><span class="dur">0:37</span></span>
           <span class="pie"><span><span class="marca">Power Rider</span><span class="titulo">Punta Cana</span><span class="clase">Edición de video</span></span></span>
         </button>
-        <button type="button" class="pieza vid vert" data-video="video/power-rider-san-juan.mp4" data-marca="Power Rider" data-titulo="San Juan" aria-label="Reproducir Power Rider San Juan">
+        <button type="button" class="pieza vid vert c-car" data-video="video/power-rider-san-juan.mp4" data-marca="Power Rider" data-titulo="San Juan" aria-label="Reproducir Power Rider San Juan">
           <span class="marco-img"><img src="img/poster-power-rider-san-juan.webp" alt="" width="540" height="960" loading="lazy" decoding="async"><span class="play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></span><span class="dur">0:39</span></span>
           <span class="pie"><span><span class="marca">Power Rider</span><span class="titulo">San Juan</span><span class="clase">Edición de video</span></span></span>
         </button>
-        </div>
+      </div>
+      <div class="car-ctrl">
+        <button type="button" class="car-btn car-ant" aria-label="Video anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <div class="car-puntos"></div>
+        <button type="button" class="car-btn car-sig" aria-label="Video siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
       </div>
     </div>
   </div>
@@ -851,7 +870,7 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
     if(mqReduce.matches||!('IntersectionObserver' in window)||!Element.prototype.animate) return;
     var grupos={'sobre-mi':'.sobre-texto .ceja, .sobre-texto > p, .datos',
       'habilidades':'.habil-cab p, .muestra',
-      'trabajos':'.trab-cab .ceja2, .pestanas, .panel:not([hidden]) .pieza:not(.c-car), .panel:not([hidden]) .carrusel, .panel:not([hidden]) .car-ctrl',
+      'trabajos':'.trab-cab .ceja2, .pestanas button, .panel:not([hidden]) .carrusel, .panel:not([hidden]) .car-ctrl',
       'contacto':'.contacto-cab .ceja2, .contacto-cab p, .renglon, .pie-sitio'};
     Object.keys(grupos).forEach(function(id){
       var sec=document.getElementById(id); if(!sec) return;
@@ -872,22 +891,21 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
   function vidrio(){
     if(!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
     document.addEventListener('pointermove',function(e){
-      var b=e.target.closest&&e.target.closest('.btn, .pestanas button, .visor button, .pieza'); if(!b) return;
+      var b=e.target.closest&&e.target.closest('.btn, .pestanas button, .visor button, .car-btn, .pieza'); if(!b) return;
       if(b.classList.contains('pieza')) b=b.querySelector('.abrir'); if(!b) return;
       var r=b.getBoundingClientRect(); b.style.setProperty('--mx',(e.clientX-r.left)+'px'); b.style.setProperty('--my',(e.clientY-r.top)+'px');
     },{passive:true});
   }
-  /* carrusel 3D de Diseño y fotomontaje */
-  function carrusel(){
-    var c=document.getElementById('carrusel'); if(!c) return;
-    var it=[].slice.call(c.querySelectorAll('.c-car')), n=it.length, act=0, pts=document.getElementById('car-puntos'), x0=null, mov=false;
-    it.forEach(function(p,i){ var d=document.createElement('button'); d.type='button'; d.setAttribute('aria-label','Ver trabajo '+(i+1)+' de '+n); d.addEventListener('click',function(){ir(i)}); pts.appendChild(d); });
+  /* carruseles 3D (diseño, video y social media) */
+  function carrusel(c){
+    var ctrl=c.nextElementSibling, pts=ctrl&&ctrl.querySelector('.car-puntos');
+    var it=[].slice.call(c.querySelectorAll('.c-car')), n=it.length, act=0, x0=null, mov=false;
+    [].slice.call(c.querySelectorAll('.mosaico')).forEach(function(m){ m.style.setProperty('--n', Math.max(1,m.querySelectorAll('img').length-1)); });
+    it.forEach(function(p,i){ if(!pts) return; var d=document.createElement('button'); d.type='button'; d.setAttribute('aria-label','Ir al '+(i+1)+' de '+n); d.addEventListener('click',function(){ir(i)}); pts.appendChild(d); });
     function ir(i){ act=(i+n)%n; it.forEach(function(p,j){ var o=((j-act)%n+n)%n; if(o>n/2) o-=n; p.setAttribute('data-pos',o); p.tabIndex=o===0?0:-1; p.setAttribute('aria-hidden',o===0?'false':'true'); });
-      [].slice.call(pts.children).forEach(function(d,j){ d.setAttribute('aria-current',j===act?'true':'false'); }); }
-    /* tocar una lateral la trae al centro; tocar la central la abre */
+      if(pts) [].slice.call(pts.children).forEach(function(d,j){ d.setAttribute('aria-current',j===act?'true':'false'); }); }
     c.addEventListener('click',function(e){ if(mov){ e.stopImmediatePropagation(); e.preventDefault(); mov=false; return; } var p=e.target.closest('.c-car'); if(!p) return; if(p.getAttribute('data-pos')!=='0'){ e.stopImmediatePropagation(); e.preventDefault(); ir(it.indexOf(p)); } },true);
-    document.getElementById('car-ant').addEventListener('click',function(){ir(act-1)});
-    document.getElementById('car-sig').addEventListener('click',function(){ir(act+1)});
+    if(ctrl){ ctrl.querySelector('.car-ant').addEventListener('click',function(){ir(act-1)}); ctrl.querySelector('.car-sig').addEventListener('click',function(){ir(act+1)}); }
     c.addEventListener('keydown',function(e){ if(e.key==='ArrowRight'){e.preventDefault();ir(act+1);it[act].focus();} if(e.key==='ArrowLeft'){e.preventDefault();ir(act-1);it[act].focus();} });
     c.addEventListener('pointerdown',function(e){ x0=e.clientX; mov=false; });
     c.addEventListener('pointercancel',function(){ x0=null; });
@@ -897,7 +915,7 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
     ir(0);
   }
   document.addEventListener('DOMContentLoaded',function(){
-    carrusel();
+    [].slice.call(document.querySelectorAll('.carrusel')).forEach(carrusel);
     vidrio();
     textosSecciones();
     contacto();
