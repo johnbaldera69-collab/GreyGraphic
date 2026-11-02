@@ -311,6 +311,41 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
 .pieza .mosaico.m4 img{height:auto}
 .pieza .mosaico.m4 img:first-child{grid-row:auto;aspect-ratio:var(--ar,4/5)}
 @media(min-width:900px){.pieza .mosaico.m4{grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* Carrusel 3D de Diseño y fotomontaje */
+.carrusel{position:relative;height:calc(var(--car-w) * 1.25 + 30px);perspective:1400px;--car-w:clamp(230px,70vw,300px);--car-x:58%;touch-action:pan-y;user-select:none}
+@media(min-width:700px){.carrusel{--car-w:330px;--car-x:72%}}
+@media(min-width:1100px){.carrusel{--car-w:380px;--car-x:82%}}
+.carrusel .pieza{position:absolute;left:50%;top:10px;width:var(--car-w);padding:0;border-radius:24px;overflow:hidden;border:1px solid rgba(255,255,255,.14);background:#0d0f26;
+  transform-style:preserve-3d;transition:transform .75s var(--ease-sale),filter .75s,opacity .75s,box-shadow .75s;will-change:transform;
+  transform:translateX(-50%) scale(.6);opacity:0;pointer-events:none;cursor:pointer}
+.carrusel .pieza[data-pos="0"]{transform:translateX(-50%) translateZ(0) scale(1);opacity:1;z-index:3;pointer-events:auto;cursor:zoom-in;box-shadow:0 40px 80px -30px rgba(70,80,255,.65),0 0 0 1px rgba(170,160,255,.25)}
+.carrusel .pieza[data-pos="1"]{transform:translateX(calc(-50% + var(--car-x))) translateZ(-220px) rotateY(-24deg) scale(.86);opacity:1;z-index:2;pointer-events:auto;filter:brightness(.55) saturate(.8)}
+.carrusel .pieza[data-pos="-1"]{transform:translateX(calc(-50% - var(--car-x))) translateZ(-220px) rotateY(24deg) scale(.86);opacity:1;z-index:2;pointer-events:auto;filter:brightness(.55) saturate(.8)}
+.carrusel .pieza[data-pos="2"]{transform:translateX(calc(-50% + var(--car-x) * 1.7)) translateZ(-420px) rotateY(-30deg) scale(.72);opacity:.0;z-index:1}
+.carrusel .pieza[data-pos="-2"]{transform:translateX(calc(-50% - var(--car-x) * 1.7)) translateZ(-420px) rotateY(30deg) scale(.72);opacity:.0;z-index:1}
+@media(hover:hover){.carrusel .pieza[data-pos="1"]:hover,.carrusel .pieza[data-pos="-1"]:hover{filter:brightness(.8)}}
+.carrusel .marco-img{margin:0;border-radius:0;aspect-ratio:4/5;display:block}
+.carrusel .marco-img img{width:100%;height:100%;object-fit:cover;-webkit-user-drag:none;pointer-events:none}
+.trab{overflow-x:clip}
+.carrusel .pieza .corte{display:none}
+.carrusel .pie{position:absolute;left:10px;right:10px;bottom:10px;padding:12px 12px 12px 16px;border-radius:18px;background:rgba(10,12,35,.45);-webkit-backdrop-filter:blur(16px) saturate(160%);backdrop-filter:blur(16px) saturate(160%);border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+.carrusel .pieza:not([data-pos="0"]) .pie{opacity:0;transition:opacity .4s}
+.carrusel .pieza[data-pos="0"] .pie{opacity:1;transition:opacity .5s .25s}
+.carrusel .pie .marca{color:#b9b0ff}
+.car-ctrl{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:22px}
+.car-btn{position:relative;display:grid;place-items:center;width:46px;height:46px;border-radius:999px;color:var(--hielo);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.42);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);cursor:pointer;transition:transform .3s var(--ease-sale),background .3s}
+.car-btn svg{width:20px;height:20px}
+.car-btn:hover{background:rgba(255,255,255,.14)}
+.car-btn:active{transform:scale(.94)}
+.car-btn:focus-visible,.car-puntos button:focus-visible{outline:2px solid #9A7BFF;outline-offset:3px}
+.car-puntos{display:flex;gap:8px}
+.car-puntos button{width:10px;height:10px;padding:0;border-radius:999px;border:0;background:rgba(255,255,255,.25);cursor:pointer;transition:width .4s var(--ease-sale),background .4s}
+.car-puntos button[aria-current="true"]{width:28px;background:linear-gradient(90deg,#5B7BFF,#9A7BFF)}
+@media (max-width:899px),(pointer:coarse){.carrusel .pie{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(10,12,35,.82)}}
+@media (prefers-reduced-motion:reduce){.carrusel .pieza{transition:opacity .2s}}
+.no-js .carrusel{height:auto;display:grid;gap:14px;perspective:none}
+.no-js .carrusel .pieza{position:relative;left:auto;top:auto;transform:none;opacity:1;width:auto;pointer-events:auto}
+.no-js .car-ctrl{display:none}
 .videos{display:grid;gap:14px}
 .verticales{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:14px}
 @media(min-width:700px){.verticales{max-width:880px;width:100%;margin:0 auto}}
@@ -584,19 +619,24 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
 
     <div class="panel" id="panel-diseno" role="tabpanel" aria-labelledby="tab-diseno">
       <h3 class="sr-js">Diseño y fotomontaje</h3>
-      <div class="galeria">
-        <button type="button" class="pieza alta" data-full="img/gatorade-zero.webp" data-marca="Gatorade" data-titulo="Zero 2025" aria-label="Ver Gatorade Zero 2025 en grande"><span class="corte c-tl" aria-hidden="true"></span><span class="corte c-tr" aria-hidden="true"></span><span class="corte c-bl" aria-hidden="true"></span><span class="corte c-br" aria-hidden="true"></span>
+      <div class="carrusel" id="carrusel" aria-roledescription="carrusel" aria-label="Trabajos de diseño y fotomontaje">
+        <button type="button" class="pieza c-car" data-full="img/gatorade-zero.webp" data-marca="Gatorade" data-titulo="Zero 2025" aria-label="Ver Gatorade Zero 2025 en grande"><span class="corte c-tl" aria-hidden="true"></span><span class="corte c-tr" aria-hidden="true"></span><span class="corte c-bl" aria-hidden="true"></span><span class="corte c-br" aria-hidden="true"></span>
           <span class="marco-img"><img src="img/gatorade-zero-mini.webp" alt="Gatorade Zero 2025, publicidad de producto · fotomontaje" width="900" height="756" loading="lazy" decoding="async"></span>
           <span class="pie"><span><span class="marca">Gatorade</span><span class="titulo">Zero 2025</span><span class="clase">Publicidad de producto · Fotomontaje</span></span><span class="abrir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></span>
         </button>
-        <button type="button" class="pieza " data-full="img/suzuki-jimny.webp" data-marca="Suzuki" data-titulo="Jimny" aria-label="Ver Suzuki Jimny en grande"><span class="corte c-tl" aria-hidden="true"></span><span class="corte c-tr" aria-hidden="true"></span><span class="corte c-bl" aria-hidden="true"></span><span class="corte c-br" aria-hidden="true"></span>
-          <span class="marco-img"><img src="img/suzuki-jimny-mini.webp" alt="Suzuki Jimny, publicidad automotriz · fotomontaje" width="900" height="419" loading="lazy" decoding="async"></span>
+        <button type="button" class="pieza c-car" data-full="img/suzuki-jimny.webp" data-marca="Suzuki" data-titulo="Jimny" aria-label="Ver Suzuki Jimny en grande"><span class="corte c-tl" aria-hidden="true"></span><span class="corte c-tr" aria-hidden="true"></span><span class="corte c-bl" aria-hidden="true"></span><span class="corte c-br" aria-hidden="true"></span>
+          <span class="marco-img"><img src="img/suzuki-jimny-mini.webp" style="object-position:30% 50%" alt="Suzuki Jimny, publicidad automotriz · fotomontaje" width="900" height="419" loading="lazy" decoding="async"></span>
           <span class="pie"><span><span class="marca">Suzuki</span><span class="titulo">Jimny</span><span class="clase">Publicidad automotriz · Fotomontaje</span></span><span class="abrir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></span>
         </button>
-        <button type="button" class="pieza " data-full="img/toyota-tacoma.webp" data-marca="Toyota" data-titulo="Tacoma 2025" aria-label="Ver Toyota Tacoma 2025 en grande"><span class="corte c-tl" aria-hidden="true"></span><span class="corte c-tr" aria-hidden="true"></span><span class="corte c-bl" aria-hidden="true"></span><span class="corte c-br" aria-hidden="true"></span>
-          <span class="marco-img"><img src="img/toyota-tacoma-mini.webp" alt="Toyota Tacoma 2025, publicidad automotriz · fotomontaje" width="900" height="554" loading="lazy" decoding="async"></span>
+        <button type="button" class="pieza c-car" data-full="img/toyota-tacoma.webp" data-marca="Toyota" data-titulo="Tacoma 2025" aria-label="Ver Toyota Tacoma 2025 en grande"><span class="corte c-tl" aria-hidden="true"></span><span class="corte c-tr" aria-hidden="true"></span><span class="corte c-bl" aria-hidden="true"></span><span class="corte c-br" aria-hidden="true"></span>
+          <span class="marco-img"><img src="img/toyota-tacoma-mini.webp" style="object-position:62% 50%" alt="Toyota Tacoma 2025, publicidad automotriz · fotomontaje" width="900" height="554" loading="lazy" decoding="async"></span>
           <span class="pie"><span><span class="marca">Toyota</span><span class="titulo">Tacoma 2025</span><span class="clase">Publicidad automotriz · Fotomontaje</span></span><span class="abrir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></span>
         </button>
+      </div>
+      <div class="car-ctrl">
+        <button type="button" class="car-btn" id="car-ant" aria-label="Trabajo anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <div class="car-puntos" id="car-puntos"></div>
+        <button type="button" class="car-btn" id="car-sig" aria-label="Trabajo siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
       </div>
     </div>
 
@@ -811,7 +851,7 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
     if(mqReduce.matches||!('IntersectionObserver' in window)||!Element.prototype.animate) return;
     var grupos={'sobre-mi':'.sobre-texto .ceja, .sobre-texto > p, .datos',
       'habilidades':'.habil-cab p, .muestra',
-      'trabajos':'.trab-cab .ceja2, .pestanas, .panel:not([hidden]) .pieza',
+      'trabajos':'.trab-cab .ceja2, .pestanas, .panel:not([hidden]) .pieza:not(.c-car), .panel:not([hidden]) .carrusel, .panel:not([hidden]) .car-ctrl',
       'contacto':'.contacto-cab .ceja2, .contacto-cab p, .renglon, .pie-sitio'};
     Object.keys(grupos).forEach(function(id){
       var sec=document.getElementById(id); if(!sec) return;
@@ -837,7 +877,27 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
       var r=b.getBoundingClientRect(); b.style.setProperty('--mx',(e.clientX-r.left)+'px'); b.style.setProperty('--my',(e.clientY-r.top)+'px');
     },{passive:true});
   }
+  /* carrusel 3D de Diseño y fotomontaje */
+  function carrusel(){
+    var c=document.getElementById('carrusel'); if(!c) return;
+    var it=[].slice.call(c.querySelectorAll('.c-car')), n=it.length, act=0, pts=document.getElementById('car-puntos'), x0=null, mov=false;
+    it.forEach(function(p,i){ var d=document.createElement('button'); d.type='button'; d.setAttribute('aria-label','Ver trabajo '+(i+1)+' de '+n); d.addEventListener('click',function(){ir(i)}); pts.appendChild(d); });
+    function ir(i){ act=(i+n)%n; it.forEach(function(p,j){ var o=((j-act)%n+n)%n; if(o>n/2) o-=n; p.setAttribute('data-pos',o); p.tabIndex=o===0?0:-1; p.setAttribute('aria-hidden',o===0?'false':'true'); });
+      [].slice.call(pts.children).forEach(function(d,j){ d.setAttribute('aria-current',j===act?'true':'false'); }); }
+    /* tocar una lateral la trae al centro; tocar la central la abre */
+    c.addEventListener('click',function(e){ if(mov){ e.stopImmediatePropagation(); e.preventDefault(); mov=false; return; } var p=e.target.closest('.c-car'); if(!p) return; if(p.getAttribute('data-pos')!=='0'){ e.stopImmediatePropagation(); e.preventDefault(); ir(it.indexOf(p)); } },true);
+    document.getElementById('car-ant').addEventListener('click',function(){ir(act-1)});
+    document.getElementById('car-sig').addEventListener('click',function(){ir(act+1)});
+    c.addEventListener('keydown',function(e){ if(e.key==='ArrowRight'){e.preventDefault();ir(act+1);it[act].focus();} if(e.key==='ArrowLeft'){e.preventDefault();ir(act-1);it[act].focus();} });
+    c.addEventListener('pointerdown',function(e){ x0=e.clientX; mov=false; });
+    c.addEventListener('pointercancel',function(){ x0=null; });
+    c.addEventListener('dragstart',function(e){ e.preventDefault(); });
+    c.addEventListener('pointermove',function(e){ if(x0!==null&&Math.abs(e.clientX-x0)>10) mov=true; });
+    c.addEventListener('pointerup',function(e){ if(x0===null) return; var dx=e.clientX-x0; x0=null; if(Math.abs(dx)>40){ ir(act+(dx<0?1:-1)); } });
+    ir(0);
+  }
   document.addEventListener('DOMContentLoaded',function(){
+    carrusel();
     vidrio();
     textosSecciones();
     contacto();
