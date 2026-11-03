@@ -554,6 +554,17 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
 .carrusel .pieza .mosaico,.carrusel .pieza .mosaico.m4{display:grid;grid-template-columns:repeat(var(--n,4),minmax(0,1fr));grid-template-rows:1fr 3.4fr;grid-auto-rows:auto;gap:6px;padding:6px;background:#05060f}
 .carrusel .pieza .mosaico img,.carrusel .pieza .mosaico.m4 img{grid-row:1;grid-column:auto;aspect-ratio:auto;height:100%;width:100%;object-fit:cover;border-radius:6px}
 .carrusel .pieza .mosaico img:first-child,.carrusel .pieza .mosaico.m4 img:first-child{grid-row:2;grid-column:1/-1;aspect-ratio:auto}
+
+/* ===== Visor: imagen y video siempre completos en pantalla ===== */
+.visor{grid-template-rows:auto minmax(0,1fr);height:100dvh}
+.visor .escena{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;min-height:0;padding:12px 0 0;overflow:hidden}
+.visor .escena img,.visor .escena video{display:block;width:auto;height:auto;max-width:100%;max-height:calc(100dvh - 110px);object-fit:contain;border-radius:10px;flex:0 1 auto;min-height:0}
+@supports not (height:100dvh){.visor{height:100vh}.visor .escena img,.visor .escena video{max-height:calc(100vh - 110px)}}
+.visor .escena video{background:#000}
+.visor .escena [hidden]{display:none!important}
+.visor .nav{flex:none;display:flex;justify-content:center;gap:14px}
+@media(max-width:899px){.visor .escena img,.visor .escena video{max-height:calc(100dvh - 180px)}}
+@media(min-width:900px){.visor .escena{padding:16px 84px 8px}.visor .nav{position:absolute;left:24px;right:24px;top:50%;transform:translateY(-50%);justify-content:space-between;pointer-events:none}.visor .nav button{pointer-events:auto}}
 </style>
 </head>
 <body>
@@ -746,7 +757,6 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
 <div class="visor" id="visor" hidden role="dialog" aria-modal="true" aria-labelledby="visor-titulo">
   <div class="barra"><span><span id="visor-marca"></span><br><b id="visor-titulo"></b></span><button type="button" id="visor-cerrar" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <div class="escena"><img id="visor-img" alt=""><video id="visor-video" controls playsinline preload="metadata" hidden></video><div class="nav"><button type="button" id="visor-ant" aria-label="Trabajo anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button><button type="button" id="visor-sig" aria-label="Trabajo siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div></div>
-  <div></div>
 </div>
 <!-- ===== /TRABAJOS ===== -->
 
