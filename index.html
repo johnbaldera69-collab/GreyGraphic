@@ -469,45 +469,84 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
   *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}
 }
 
-/* ================= LIQUID GLASS (estilo iOS) ================= */
+/* ================= LIQUID GLASS: vidrio claro con reflejo de color ================= */
+:root{--rim:linear-gradient(135deg,rgba(255,255,255,.75) 0%,rgba(255,255,255,.14) 22%,rgba(255,255,255,.03) 48%,rgba(255,255,255,.12) 76%,rgba(255,255,255,.55) 100%);
+  --vid-sombra:inset 1px 1px 1px rgba(255,255,255,.28),inset -1px -1px 1px rgba(255,255,255,.12),inset 0 0 16px rgba(255,255,255,.05),0 8px 24px -10px rgba(0,0,0,.65);
+  --glow:rgba(112,92,255,.9)}
 .btn,.pestanas button,.pieza .abrir,.visor button,.car-btn{
-  --g-fill:rgba(255,255,255,.07);--g-tint:rgba(0,0,0,0);
-  position:relative;isolation:isolate;overflow:hidden;border:0;border-radius:999px;color:#F5F6FF;font-weight:600;letter-spacing:-.005em;
-  background:linear-gradient(var(--g-tint),var(--g-tint)),var(--g-fill);
-  -webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);
-  box-shadow:inset 0 1px 1px rgba(255,255,255,.20),inset 0 -1px 1px rgba(0,0,0,.20),0 1px 2px rgba(0,0,0,.25),0 12px 30px -14px rgba(0,0,0,.6);
-  transition:transform .55s cubic-bezier(.34,1.56,.64,1),background-color .3s,box-shadow .3s}
-/* borde de luz: más claro arriba a la izquierda, como el vidrio real */
-.btn::before,.pestanas button::before,.pieza .abrir::before,.visor button::before,.car-btn::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;padding:1px;pointer-events:none;
-  background:linear-gradient(140deg,rgba(255,255,255,.55),rgba(255,255,255,.12) 32%,rgba(255,255,255,.03) 58%,rgba(255,255,255,.26));
+  --hl:0;position:relative;isolation:isolate;overflow:hidden;border:0;border-radius:999px;color:#F7F8FF;font-weight:600;letter-spacing:-.005em;
+  background:radial-gradient(120px circle at var(--mx,50%) var(--my,-40%),rgba(255,255,255,calc(var(--hl) * .16)),transparent 70%),rgba(255,255,255,.045);
+  -webkit-backdrop-filter:blur(14px) saturate(160%) brightness(1.08);backdrop-filter:blur(14px) saturate(160%) brightness(1.08);
+  box-shadow:var(--vid-sombra);
+  transition:transform .55s cubic-bezier(.34,1.56,.64,1),box-shadow .35s}
+/* borde especular: brillo arriba a la izquierda y abajo a la derecha */
+.btn::before,.pestanas button::before,.pieza .abrir::before,.visor button::before,.car-btn::before{content:"";position:absolute;inset:0;z-index:2;border-radius:inherit;padding:1px;pointer-events:none;background:var(--rim);
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
-/* luz suave que sigue al puntero */
-.btn::after,.pestanas button::after,.pieza .abrir::after,.visor button::after,.car-btn::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;background:radial-gradient(110px circle at var(--mx,50%) var(--my,-30%),rgba(255,255,255,.16),transparent 70%);opacity:0;transition:opacity .35s}
-@media(hover:hover){
-  .btn:hover,.pestanas button:hover,.visor button:hover,.car-btn:hover,.pieza:hover .abrir{--g-fill:rgba(255,255,255,.12)}
-  .btn:hover::after,.pestanas button:hover::after,.visor button:hover::after,.car-btn:hover::after,.pieza:hover .abrir::after{opacity:1}
-}
+.btn::after,.pestanas button::after,.pieza .abrir::after,.visor button::after,.car-btn::after{content:none}
+@media(hover:hover){.btn:hover,.pestanas button:hover,.visor button:hover,.car-btn:hover,.pieza:hover .abrir{--hl:1}}
 .btn:active,.pestanas button:active,.visor button:active,.car-btn:active{transform:scale(.95)}
-.btn:focus-visible,.car-btn:focus-visible,.pestanas button:focus-visible,.visor button:focus-visible{outline:2px solid rgba(170,160,255,.9);outline-offset:3px}
-/* acción principal: vidrio teñido con el violeta de la marca */
-.btn-cta,.pestanas button[aria-selected="true"]{--g-tint:rgba(96,88,255,.55);box-shadow:inset 0 1px 1px rgba(255,255,255,.30),inset 0 -1px 1px rgba(20,10,90,.35),0 1px 2px rgba(0,0,0,.25),0 14px 34px -14px rgba(96,88,255,.85)}
-@media(hover:hover){.btn-cta:hover{--g-tint:rgba(110,100,255,.66)}}
+.btn:focus-visible,.car-btn:focus-visible,.pestanas button:focus-visible,.visor button:focus-visible{outline:2px solid rgba(190,180,255,.9);outline-offset:3px}
+/* botones con color: el vidrio sigue claro y el color queda detrás como un reflejo */
+.btn-cta,.pestanas button[aria-selected="true"],.carrusel .pieza[data-pos="0"] .abrir{
+  background:radial-gradient(120px circle at var(--mx,50%) var(--my,-40%),rgba(255,255,255,calc(var(--hl) * .16)),transparent 70%),
+    radial-gradient(90% 140% at 50% 125%,rgba(112,92,255,.62),rgba(112,92,255,0) 70%),
+    radial-gradient(60% 90% at 15% -20%,rgba(91,123,255,.28),transparent 70%),rgba(255,255,255,.05);
+  box-shadow:var(--vid-sombra),0 10px 34px -8px rgba(112,92,255,.75),0 0 26px -10px rgba(91,123,255,.7)}
 .btn{min-height:50px;padding:0 24px}
 .btn-sm{min-height:44px;padding:0 18px}
 .btn-cta:hover svg{transform:translateX(3px)}
-/* pestañas de Trabajos: sin contorno exterior, cada una es su propia píldora de vidrio */
 .pestanas{display:flex;gap:10px;padding:0;border:0;border-radius:0;background:none;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;overflow:visible}
-.pestanas button{min-height:46px;padding:0 18px;color:rgba(235,237,255,.78)}
+.pestanas button{min-height:46px;padding:0 18px;color:rgba(240,241,255,.72)}
 .pestanas button[aria-selected="true"]{color:#fff}
 @media(max-width:520px){.pestanas{gap:6px}.pestanas button{padding:0 10px}}
-/* círculos */
 .pieza .abrir,.visor button,.car-btn{display:grid;place-items:center}
 .pieza .abrir{width:44px;height:44px}
 .car-btn{width:48px;height:48px;padding:0}
-/* teléfonos: desenfoque más ligero */
-@media (max-width:899px),(pointer:coarse){.btn,.pestanas button,.pieza .abrir,.visor button,.car-btn{-webkit-backdrop-filter:blur(12px) saturate(160%);backdrop-filter:blur(12px) saturate(160%)}}
-@media (prefers-reduced-motion:reduce){.btn,.pestanas button,.pieza .abrir,.visor button,.car-btn{transition:background-color .2s}}
+@media (max-width:899px),(pointer:coarse){.btn,.pestanas button,.pieza .abrir,.visor button,.car-btn{-webkit-backdrop-filter:blur(10px) saturate(150%);backdrop-filter:blur(10px) saturate(150%)}}
+@media (prefers-reduced-motion:reduce){.btn,.pestanas button,.pieza .abrir,.visor button,.car-btn{transition:none}}
 
+/* ================= SISTEMA VISUAL UNIFICADO ================= */
+/* sin líneas divisorias entre secciones: el espacio y la luz separan */
+.sobre,.habil,.trab,.contacto{border-top:0}
+.habil{background:none}
+/* etiquetas de sección: discretas, sin adornos */
+.etiqueta{margin:0 0 14px;font:500 .74rem/1 var(--f-texto);letter-spacing:.22em;text-transform:uppercase;color:rgba(235,237,255,.5)}
+/* un solo acento de color en texto: la palabra "forma" de la portada */
+.sub{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:#B9B3FF;font-weight:500}
+.firma{border-left:1px solid rgba(255,255,255,.22)}
+.firma em{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:#B9B3FF}
+.datos dd.num b{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:#fff}
+.datos dd.tools span{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12)}
+/* puntos del carrusel: neutros */
+.car-puntos button{background:rgba(255,255,255,.22)}
+.car-puntos button[aria-current="true"]{background:rgba(255,255,255,.9)}
+/* iconos de contacto y reproducir: discos de vidrio con reflejo */
+.renglon .ico-c,.pieza.vid .play,.muestra .disco{position:relative;isolation:isolate;overflow:hidden;border-radius:999px;color:#fff;
+  background:radial-gradient(90% 140% at 50% 125%,rgba(112,92,255,.6),rgba(112,92,255,0) 70%),rgba(255,255,255,.05);
+  -webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);
+  box-shadow:var(--vid-sombra),0 10px 30px -10px rgba(112,92,255,.7)}
+.renglon .ico-c::before,.pieza.vid .play::before,.muestra .disco::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;background:var(--rim);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.renglon .ico-c{width:56px;height:56px}
+.renglon::after{display:none}
+/* Habilidades: tarjetas de vidrio; el color de cada área queda como un resplandor detrás del disco */
+.muestra{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.08);border-radius:22px;overflow:hidden;box-shadow:inset 1px 1px 1px rgba(255,255,255,.08)}
+.muestra .tinta{background:radial-gradient(55% 60% at 50% 52%,color-mix(in srgb,var(--c) 55%,transparent),transparent 72%);border-radius:0;display:grid;place-items:center;min-height:150px}
+.muestra .tinta::after{display:none}
+.muestra .disco{display:grid;place-items:center;width:84px;height:84px;background:radial-gradient(90% 140% at 50% 125%,color-mix(in srgb,var(--c) 70%,transparent),transparent 70%),rgba(255,255,255,.05);box-shadow:var(--vid-sombra),0 14px 36px -12px var(--c);transition:transform .6s cubic-bezier(.34,1.56,.64,1)}
+.muestra .ico{position:static;margin:0;width:34px;height:34px;transform:none}
+.muestra:hover .ico{transform:none}
+@media(hover:hover){.muestra:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.16)}.muestra:hover .disco{transform:scale(1.06)}}
+.muestra .usa{letter-spacing:.02em;text-transform:none;color:rgba(235,237,255,.55);font-size:.82rem}
+@media(min-width:1100px){.muestra .tinta{min-height:170px}}
+@media (max-width:899px),(pointer:coarse){.renglon .ico-c,.pieza.vid .play,.muestra .disco{-webkit-backdrop-filter:none;backdrop-filter:none}}
+/* tarjetas del carrusel: borde de vidrio coherente con los botones */
+.carrusel .pieza{border:0;box-shadow:inset 1px 1px 1px rgba(255,255,255,.12)}
+.carrusel .pieza::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;z-index:4;background:var(--rim);opacity:.6;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.carrusel .pieza[data-pos="0"]{box-shadow:0 40px 90px -36px rgba(112,92,255,.7)}
+.carrusel .pie .marca{color:rgba(235,237,255,.6)}
+.pieza .marca{color:rgba(235,237,255,.6)}
 /* ================= CARRUSELES (video y social) ================= */
 .carrusel .pieza .marco-img,.carrusel .pieza.ancho .marco-img,.carrusel .pieza.vert .marco-img{aspect-ratio:4/5;margin:0;border-radius:0}
 .carrusel .pieza.vid .dur{top:14px;right:14px;bottom:auto}
@@ -531,7 +570,6 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
 
     <div class="hero-grid">
       <div class="hero-foto" id="foto">
-        <div class="puntos" aria-hidden="true" data-in="deco"></div>
         <div class="retrato"><picture>
           <source media="(min-width:900px)" srcset="img/retrato-completo.webp">
           <img src="img/retrato-completo-movil.webp" alt="Retrato del diseñador de Grey Graphic iluminado en azul" width="900" height="595" fetchpriority="high" decoding="async">
@@ -570,7 +608,6 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
   <div class="wrap">
     <div class="sobre-grid">
       <div class="hero-foto" aria-hidden="true">
-        <div class="puntos"></div>
         <div class="retrato"><picture>
           <source media="(min-width:900px)" srcset="img/perfil.webp">
           <img src="img/perfil-movil.webp" alt="" width="900" height="600" loading="lazy" decoding="async">
@@ -585,8 +622,8 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
       </div>
 
       <div class="sobre-texto">
-        <p class="ceja">Sobre mí</p>
-        <h2 id="sobre-titulo">El diseño va más allá de lo <em>estético</em>.</h2>
+        <p class="etiqueta">Sobre mí</p>
+        <h2 id="sobre-titulo">El diseño va más allá de lo estético</h2>
         <p>Entiendo el diseño como algo que va más allá de lo estético. Cada proyecto tiene una intención, una historia y una necesidad que merece ser comprendida antes de convertirse en una pieza visual. Por eso, mi enfoque combina creatividad, criterio visual y atención al detalle para desarrollar trabajos que respondan a un propósito y tengan una identidad propia.</p>
         <dl class="datos">
           <div class="exp"><dt>Experiencia</dt><dd class="num"><b>+6</b><span>años</span></dd></div>
@@ -602,15 +639,15 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
 <section class="habil" id="habilidades" aria-labelledby="habil-titulo">
   <div class="wrap">
     <div class="habil-cab">
-      <h2 id="habil-titulo">Habilidades con <em>identidad</em> propia</h2>
+      <div><p class="etiqueta">Habilidades</p><h2 id="habil-titulo">Habilidades con identidad propia</h2></div>
       <p>Cada área es una forma distinta de comunicar una idea a través del diseño.</p>
     </div>
     <ul class="muestrario">
-          <li class="muestra" style="--c:#3D5BFF"><div class="tinta" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 7 12l5 9 5-9-5-9Z"/><path d="M12 12v9"/><circle cx="12" cy="11" r="1.4"/><path d="M3 6h3M18 6h3"/><rect x="1.5" y="5" width="2" height="2"/><rect x="20.5" y="5" width="2" height="2"/></svg></div><div class="info"><h3>Identidad visual y branding</h3><p>Logotipos, paletas y sistemas visuales para que una marca se reconozca a primera vista.</p><span class="usa">Illustrator</span></div></li>
-          <li class="muestra" style="--c:#5A55FF"><div class="tinta" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="12" height="12" rx="1.5"/><path d="M7 7V4.5A1.5 1.5 0 0 1 8.5 3h11A1.5 1.5 0 0 1 21 4.5v11a1.5 1.5 0 0 1-1.5 1.5H15"/><path d="m3 16 3.5-3.5 3 3 2-2L15 17"/><circle cx="11" cy="10.5" r="1"/></svg></div><div class="info"><h3>Fotomontaje</h3><p>Composiciones publicitarias que integran producto, fondo y luz en una sola imagen.</p><span class="usa">Photoshop</span></div></li>
-          <li class="muestra" style="--c:#6F4FFF"><div class="tinta" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="m10 7.5 4.5 2.5-4.5 2.5v-5Z"/><path d="M3 20h18"/><path d="M8 18.5v3M15 18.5v3"/></svg></div><div class="info"><h3>Edición de video</h3><p>Piezas en movimiento para marcas y redes: ritmo, cortes y acabado visual.</p><span class="usa"><span>Premiere</span> · <span>After Effects</span></span></div></li>
-          <li class="muestra" style="--c:#8A63FF"><div class="tinta" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M8.5 7h3v3h-3zM12.5 7h3v3h-3zM8.5 11h3v3h-3zM12.5 11h3v3h-3z"/><path d="M10.5 18.5h3"/></svg></div><div class="info"><h3>Contenido para redes</h3><p>Publicaciones y campañas con una línea gráfica coherente para cada marca.</p><span class="usa">Photoshop · Illustrator</span></div></li>
-          <li class="muestra" style="--c:linear-gradient(160deg,#3D5BFF,#9A7BFF)"><div class="tinta" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10v4a1 1 0 0 0 1 1h3l8 4.5V4.5L7 9H4a1 1 0 0 0-1 1Z"/><path d="M7 15l1.5 5h2.5L10 15.5"/><path d="M18.5 9a4 4 0 0 1 0 6M20.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></div><div class="info"><h3>Diseño publicitario</h3><p>Piezas para campañas de producto y automotriz, del concepto al arte final.</p><span class="usa">Photoshop</span></div></li>
+          <li class="muestra" style="--c:#3D5BFF"><div class="tinta" aria-hidden="true"><span class="disco"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 7 12l5 9 5-9-5-9Z"/><path d="M12 12v9"/><circle cx="12" cy="11" r="1.4"/><path d="M3 6h3M18 6h3"/><rect x="1.5" y="5" width="2" height="2"/><rect x="20.5" y="5" width="2" height="2"/></svg></span></div><div class="info"><h3>Identidad visual y branding</h3><p>Logotipos, paletas y sistemas visuales para que una marca se reconozca a primera vista.</p><span class="usa">Illustrator</span></div></li>
+          <li class="muestra" style="--c:#5A55FF"><div class="tinta" aria-hidden="true"><span class="disco"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="12" height="12" rx="1.5"/><path d="M7 7V4.5A1.5 1.5 0 0 1 8.5 3h11A1.5 1.5 0 0 1 21 4.5v11a1.5 1.5 0 0 1-1.5 1.5H15"/><path d="m3 16 3.5-3.5 3 3 2-2L15 17"/><circle cx="11" cy="10.5" r="1"/></svg></span></div><div class="info"><h3>Fotomontaje</h3><p>Composiciones publicitarias que integran producto, fondo y luz en una sola imagen.</p><span class="usa">Photoshop</span></div></li>
+          <li class="muestra" style="--c:#6F4FFF"><div class="tinta" aria-hidden="true"><span class="disco"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="m10 7.5 4.5 2.5-4.5 2.5v-5Z"/><path d="M3 20h18"/><path d="M8 18.5v3M15 18.5v3"/></svg></span></div><div class="info"><h3>Edición de video</h3><p>Piezas en movimiento para marcas y redes: ritmo, cortes y acabado visual.</p><span class="usa"><span>Premiere</span> · <span>After Effects</span></span></div></li>
+          <li class="muestra" style="--c:#8A63FF"><div class="tinta" aria-hidden="true"><span class="disco"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M8.5 7h3v3h-3zM12.5 7h3v3h-3zM8.5 11h3v3h-3zM12.5 11h3v3h-3z"/><path d="M10.5 18.5h3"/></svg></span></div><div class="info"><h3>Contenido para redes</h3><p>Publicaciones y campañas con una línea gráfica coherente para cada marca.</p><span class="usa">Photoshop · Illustrator</span></div></li>
+          <li class="muestra" style="--c:#8F7BFF"><div class="tinta" aria-hidden="true"><span class="disco"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10v4a1 1 0 0 0 1 1h3l8 4.5V4.5L7 9H4a1 1 0 0 0-1 1Z"/><path d="M7 15l1.5 5h2.5L10 15.5"/><path d="M18.5 9a4 4 0 0 1 0 6M20.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></span></div><div class="info"><h3>Diseño publicitario</h3><p>Piezas para campañas de producto y automotriz, del concepto al arte final.</p><span class="usa">Photoshop</span></div></li>
     </ul>
   </div>
 </section>
@@ -620,7 +657,7 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
 <section class="trab" id="trabajos" aria-labelledby="trab-titulo">
   <div class="wrap">
     <div class="trab-cab">
-      <div><p class="ceja2">Trabajos</p><h2 id="trab-titulo">Piezas que encontraron su forma</h2></div>
+      <div><p class="etiqueta">Trabajos</p><h2 id="trab-titulo">Piezas que encontraron su forma</h2></div>
       <div class="pestanas" role="tablist" aria-label="Tipo de trabajo">
         <button type="button" role="tab" id="tab-diseno" aria-controls="panel-diseno" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="7" width="12" height="12" rx="1.5"/><path d="M7 7V4.5A1.5 1.5 0 0 1 8.5 3h11A1.5 1.5 0 0 1 21 4.5v11a1.5 1.5 0 0 1-1.5 1.5H15"/></svg><span class="lg">Diseño y fotomontaje</span><span class="sm">Diseño</span></button>
         <button type="button" role="tab" id="tab-video" aria-controls="panel-video" aria-selected="false" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="5" width="18" height="12" rx="1.5"/><path d="m10 8.5 4.5 2.5-4.5 2.5v-5Z"/></svg><span class="lg">Edición de video</span><span class="sm">Videos</span></button>
@@ -717,8 +754,8 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
 <section class="contacto" id="contacto" aria-labelledby="contacto-titulo">
   <div class="wrap">
     <div class="contacto-cab">
-      <p class="ceja2">Contacto</p>
-      <h2 id="contacto-titulo">Hablemos de tu <em>proyecto</em></h2>
+      <p class="etiqueta">Contacto</p>
+      <h2 id="contacto-titulo">Hablemos de tu proyecto</h2>
       <p>Cuéntame tu idea y encontremos juntos la forma de expresarla. Escríbeme por el medio que prefieras.</p>
     </div>
     <ul class="renglones">
@@ -868,10 +905,10 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
   /* textos de las secciones: suben desde una máscara y se desvanecen como en la portada */
   function textosSecciones(){
     if(mqReduce.matches||!('IntersectionObserver' in window)||!Element.prototype.animate) return;
-    var grupos={'sobre-mi':'.sobre-texto .ceja, .sobre-texto > p, .datos',
-      'habilidades':'.habil-cab p, .muestra',
-      'trabajos':'.trab-cab .ceja2, .pestanas button, .panel:not([hidden]) .carrusel, .panel:not([hidden]) .car-ctrl',
-      'contacto':'.contacto-cab .ceja2, .contacto-cab p, .renglon, .pie-sitio'};
+    var grupos={'sobre-mi':'.sobre-texto .etiqueta, .sobre-texto > p, .datos',
+      'habilidades':'.habil-cab .etiqueta, .habil-cab > p, .muestra',
+      'trabajos':'.trab-cab .etiqueta, .pestanas button, .panel:not([hidden]) .carrusel, .panel:not([hidden]) .car-ctrl',
+      'contacto':'.contacto-cab .etiqueta, .contacto-cab p, .renglon, .pie-sitio'};
     Object.keys(grupos).forEach(function(id){
       var sec=document.getElementById(id); if(!sec) return;
       if(sec.getBoundingClientRect().top<innerHeight*0.85) return; /* ya visible: se queda quieta */
