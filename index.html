@@ -224,9 +224,9 @@ html{scroll-behavior:smooth;scroll-padding-top:12px}
 .js .sobre.espera .retrato{opacity:0;filter:blur(16px);transform:scale(1.02)}
 .js .sobre.activa #anilloS{stroke-dasharray:100 100;stroke-dashoffset:0;transition:stroke-dashoffset 1s cubic-bezier(.65,.05,.25,1)}
 .js .sobre.activa .retrato{opacity:1;filter:blur(0);transform:none;transition:opacity .8s ease .9s,filter .8s ease .9s,transform .8s ease .9s}
-.js .sobre.activa .retrato img{animation:destello 1.1s ease-out .9s both}
-@keyframes destello{from{filter:brightness(1.9)}to{filter:brightness(1)}}
-.sobre .haz.pasa{animation:pasaLuz 1.1s cubic-bezier(.45,0,.35,1) .85s both}
+
+
+
 @keyframes pasaLuz{0%{transform:translateX(-130%) skewX(-14deg);opacity:0}12%{opacity:1}80%{opacity:1}100%{transform:translateX(290%) skewX(-14deg);opacity:0}}
 
 /* ================= HABILIDADES ================= */
@@ -609,7 +609,6 @@ p{text-wrap:pretty}
           <source media="(min-width:900px)" srcset="img/retrato-recorte.webp">
           <img src="img/retrato-recorte-movil.webp" alt="" width="900" height="595">
         </picture></div>
-        <div class="haz" id="haz" aria-hidden="true"></div>
         <span class="corte c-tl" data-in="corte" aria-hidden="true"></span><span class="corte c-tr" data-in="corte" aria-hidden="true"></span><span class="corte c-bl" data-in="corte" aria-hidden="true"></span><span class="corte c-br" data-in="corte" aria-hidden="true"></span>
       </div>
 
@@ -644,7 +643,6 @@ p{text-wrap:pretty}
           <source media="(min-width:900px)" srcset="img/perfil-recorte.webp">
           <img src="img/perfil-recorte-movil.webp" alt="" width="900" height="600" loading="lazy" decoding="async">
         </picture></div>
-        <div class="haz" id="haz2"></div>
         <span class="corte c-tl"></span><span class="corte c-tr"></span><span class="corte c-bl"></span><span class="corte c-br"></span>
       </div>
 
@@ -853,8 +851,6 @@ p{text-wrap:pretty}
     anim($('#anilloC'),[{strokeDasharray:'100 100',strokeDashoffset:100},{strokeDasharray:'100 100',strokeDashoffset:0}],{duration:1100,delay:150,easing:EL});
     /* 2) al cerrarse, sale la foto con la luz de estudio */
     cada('#inicio .retrato',[{opacity:0,filter:(LIGERO?'blur(0px)':'blur(16px)'),transform:'scale(1.02)'},{opacity:1,filter:'blur(0px)',transform:'none'}],{duration:850,delay:1150,easing:'ease-out'});
-    anim($('#haz'),[{transform:'translateX(-130%) skewX(-14deg)',opacity:0},{opacity:1,offset:.12},{opacity:1,offset:.8},{transform:'translateX(290%) skewX(-14deg)',opacity:0}],{duration:1100,delay:1100,easing:'cubic-bezier(.45,0,.35,1)'});
-    cada('#inicio .retrato img',[{filter:'brightness(1.9)'},{filter:'brightness(1)'}],{duration:1100,delay:1150,easing:'ease-out'});
     cada('[data-in="txt"]',[{opacity:0,transform:'translateY(14px)',filter:bl(8)},{opacity:1,transform:'none',filter:'blur(0px)'}],{duration:750,delay:420,easing:'cubic-bezier(.16,1,.3,1)'},90);
     /* el anillo se dibuja y su trazo llega hasta el botón */
     anim($('#conPath'),[{strokeDasharray:largo+' '+largo,strokeDashoffset:largo},{strokeDasharray:largo+' '+largo,strokeDashoffset:0}],{duration:900,delay:1900,easing:'cubic-bezier(.55,0,.75,.4)'});
@@ -890,11 +886,11 @@ p{text-wrap:pretty}
     catch(e){console.warn(e);fin();}
   }
   function luzSobre(){
-    var h=document.getElementById('haz2'), sec=document.getElementById('sobre-mi');
-    if(!h||!sec||mqReduce.matches||!('IntersectionObserver' in window))return;
+    var sec=document.getElementById('sobre-mi');
+    if(!sec||mqReduce.matches||!('IntersectionObserver' in window))return;
     var r=sec.getBoundingClientRect(); if(r.top<innerHeight*0.6) return; /* ya está a la vista: se muestra completa */
     sec.classList.add('espera');
-    var io=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){ sec.classList.add('activa'); h.classList.add('pasa'); io.disconnect(); } });},{threshold:0,rootMargin:'0px 0px -8% 0px'});
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){ sec.classList.add('activa'); io.disconnect(); } });},{threshold:0,rootMargin:'0px 0px -8% 0px'});
     io.observe(sec);
   }
   function trabajos(){
