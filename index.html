@@ -620,6 +620,43 @@ p{text-wrap:pretty}
 .pie-sitio a{color:rgba(235,237,255,.6);text-decoration:none;transition:color .2s}
 .pie-sitio a:hover{color:var(--hielo)}
 .pie-enlaces{display:flex;flex-wrap:wrap;gap:8px 22px}
+/* ================= BOTONES DE LUZ =================
+   Vidrio oscuro con borde violeta encendido abajo. Una luz sigue al puntero dentro del botón:
+   violeta a la izquierda, azul a la derecha; lo persigue con inercia y se apaga despacio al salir.
+   La posición (--lx, --ly), la intensidad (--lo) y el color (--lc) los mueve luzBotones(). */
+.btn,.btn-copiar,.pestanas button,.car-btn,.visor button,.pieza .abrir{
+  --lx:50%;--ly:50%;--lo:0;--lc:123 63 242;--lr:64px;
+  position:relative;isolation:isolate;overflow:hidden;border:0;color:#F7F8FF;
+  background:linear-gradient(180deg,rgba(26,15,60,.92),rgba(11,7,30,.94));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 12px 28px -16px rgba(112,72,255,.85),0 0 24px -12px rgb(var(--lc) / calc(.22 + var(--lo) * .6));
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  transition:transform .55s cubic-bezier(.34,1.56,.64,1),color .3s}
+/* borde fino: tenue arriba, violeta abajo, y se enciende donde está la luz */
+.btn::before,.btn-copiar::before,.pestanas button::before,.car-btn::before,.visor button::before,.pieza .abrir::before{content:"";position:absolute;inset:0;z-index:2;border-radius:inherit;padding:1px;pointer-events:none;
+  background:radial-gradient(calc(var(--lr) * 1.25) circle at var(--lx) var(--ly),rgb(var(--lc) / var(--lo)),transparent 75%),
+    linear-gradient(180deg,rgba(180,160,255,.28) 0%,rgba(123,77,255,.38) 50%,rgba(158,118,255,.95) 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+/* la luz: por encima del fondo y por debajo del texto */
+.btn::after,.btn-copiar::after,.pestanas button::after,.car-btn::after,.visor button::after,.pieza .abrir::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(var(--lr) circle at var(--lx) var(--ly),rgb(var(--lc) / .62) 0%,rgb(var(--lc) / .26) 42%,transparent 72%);
+  opacity:var(--lo)}
+/* principales y pestaña activa: un resplandor violeta permanente desde abajo */
+.btn-cta,.pestanas button[aria-selected="true"],.carrusel .pieza[data-pos="0"] .abrir{
+  background:radial-gradient(85% 120% at 50% 135%,rgba(112,72,255,.55),transparent 70%),linear-gradient(180deg,rgba(30,17,70,.92),rgba(13,8,36,.94));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 14px 34px -14px rgba(112,72,255,.95),0 0 30px -12px rgb(var(--lc) / calc(.35 + var(--lo) * .55))}
+.btn-cta::before,.pestanas button[aria-selected="true"]::before,.carrusel .pieza[data-pos="0"] .abrir::before{
+  background:radial-gradient(calc(var(--lr) * 1.25) circle at var(--lx) var(--ly),rgb(var(--lc) / var(--lo)),transparent 75%),
+    linear-gradient(180deg,rgba(190,172,255,.4) 0%,rgba(130,86,255,.55) 50%,rgba(176,140,255,1) 100%)}
+.btn-cta:hover{background:radial-gradient(85% 120% at 50% 135%,rgba(112,72,255,.55),transparent 70%),linear-gradient(180deg,rgba(30,17,70,.92),rgba(13,8,36,.94))}
+.car-btn:hover{background:linear-gradient(180deg,rgba(26,15,60,.92),rgba(11,7,30,.94))}
+.pestanas button{color:rgba(240,241,255,.72)}
+.pestanas button:hover,.pestanas button[aria-selected="true"]{color:#fff}
+.btn-copiar{border-radius:999px;font-weight:600}
+.btn-copiar.ok{color:#3BE29A}
+.btn-copiar.ok::before{background:linear-gradient(180deg,rgba(59,226,154,.45),#3BE29A)}
+.btn-copiar:active{transform:scale(.95)}
+.pieza:hover .abrir{background:linear-gradient(180deg,rgba(26,15,60,.92),rgba(11,7,30,.94))}
+@media (max-width:899px),(pointer:coarse){.btn,.btn-copiar,.pestanas button,.car-btn,.visor button,.pieza .abrir{-webkit-backdrop-filter:none;backdrop-filter:none}}
 </style>
 </head>
 <body>
@@ -1030,14 +1067,55 @@ p{text-wrap:pretty}
     addEventListener('scroll',pedir,{passive:true});
     addEventListener('resize',pedir);
   }
-  /* botones liquid glass: el destello sigue al puntero */
-  function vidrio(){
-    if(!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  /* botones de luz: el resplandor persigue al puntero con inercia, cambia de violeta (izquierda)
+     a azul (derecha) y se apaga despacio al salir. En pantallas táctiles se enciende donde se toca. */
+  function luzBotones(){
+    if(!window.requestAnimationFrame) return;
+    var SEL='.btn, .btn-copiar, .pestanas button, .car-btn, .visor button';
+    var VIO=[123,63,242], AZU=[52,96,242], activos=[], corriendo=false, actual=null;
+    function destino(t){ if(!t||!t.closest) return null; var b=t.closest(SEL); if(b) return b; var p=t.closest('.pieza'); return p?p.querySelector('.abrir'):null; }
+    function estado(el){ return el.__luz||(el.__luz={el:el,x:.5,y:.5,tx:.5,ty:.5,o:0,to:0}); }
+    function apuntar(s,cx,cy,salto){
+      var r=s.el.getBoundingClientRect(); if(!r.width) return;
+      s.tx=Math.min(1,Math.max(0,(cx-r.left)/r.width)); s.ty=Math.min(1,Math.max(0,(cy-r.top)/r.height));
+      if(salto||s.o<.04){ s.x=s.tx; s.y=s.ty; s.el.style.setProperty('--lr',Math.round(Math.max(46,r.height*1.25))+'px'); }
+    }
+    function pintar(s){
+      var st=s.el.style, t=s.x, c=[0,1,2].map(function(i){ return Math.round(VIO[i]+(AZU[i]-VIO[i])*t); });
+      st.setProperty('--lx',(s.x*100).toFixed(1)+'%'); st.setProperty('--ly',(s.y*100).toFixed(1)+'%');
+      st.setProperty('--lo',s.o.toFixed(3)); st.setProperty('--lc',c.join(' '));
+    }
+    function paso(){
+      var quieto=mqReduce.matches;
+      activos=activos.filter(function(s){
+        var k=quieto?1:.16, ko=quieto?1:(s.to>s.o?.16:.045);
+        s.x+=(s.tx-s.x)*k; s.y+=(s.ty-s.y)*k; s.o+=(s.to-s.o)*ko;
+        if(!s.to&&s.o<.004){ s.o=0; pintar(s); return false; }
+        pintar(s); return true;
+      });
+      if(activos.length) requestAnimationFrame(paso); else corriendo=false;
+    }
+    function encender(s,o){ s.to=o; if(activos.indexOf(s)<0) activos.push(s); if(!corriendo){ corriendo=true; requestAnimationFrame(paso); } }
+    function soltar(){ if(actual){ encender(estado(actual),0); actual=null; } }
     document.addEventListener('pointermove',function(e){
-      var b=e.target.closest&&e.target.closest('.btn, .pestanas button, .visor button, .car-btn, .pieza'); if(!b) return;
-      if(b.classList.contains('pieza')) b=b.querySelector('.abrir'); if(!b) return;
-      var r=b.getBoundingClientRect(); b.style.setProperty('--mx',(e.clientX-r.left)+'px'); b.style.setProperty('--my',(e.clientY-r.top)+'px');
+      if(e.pointerType==='touch') return;
+      var el=destino(e.target);
+      if(el!==actual){ soltar(); if(el){ actual=el; apuntar(estado(el),e.clientX,e.clientY,true); encender(estado(el),1); } }
+      else if(el){ apuntar(estado(el),e.clientX,e.clientY); }
     },{passive:true});
+    document.documentElement.addEventListener('pointerleave',soltar);
+    window.addEventListener('blur',soltar);
+    window.addEventListener('scroll',function(){ if(actual) soltar(); },{passive:true});
+    /* táctil: la luz aparece donde se toca y se desvanece al soltar */
+    document.addEventListener('pointerdown',function(e){
+      if(e.pointerType!=='touch') return; var el=destino(e.target); if(!el) return;
+      var s=estado(el); apuntar(s,e.clientX,e.clientY,true); s.o=Math.max(s.o,.35); encender(s,1);
+      function fuera(){ encender(s,0); document.removeEventListener('pointerup',fuera); document.removeEventListener('pointercancel',fuera); }
+      document.addEventListener('pointerup',fuera); document.addEventListener('pointercancel',fuera);
+    },{passive:true});
+    /* teclado: al enfocar con Tab la luz se enciende en el centro */
+    document.addEventListener('focusin',function(e){ var el=e.target.closest&&e.target.closest(SEL); if(!el||!el.matches(':focus-visible')) return; var s=estado(el); s.tx=s.ty=.5; if(s.o<.04){s.x=s.y=.5;} encender(s,.8); });
+    document.addEventListener('focusout',function(e){ var el=e.target.closest&&e.target.closest(SEL); if(el&&el!==actual) encender(estado(el),0); });
   }
   /* carruseles 3D (diseño, video y social media) */
   function carrusel(c){
@@ -1070,7 +1148,7 @@ p{text-wrap:pretty}
   document.addEventListener('DOMContentLoaded',function(){
     imagenes();
     [].slice.call(document.querySelectorAll('.carrusel')).forEach(carrusel);
-    vidrio();
+    luzBotones();
     textosSecciones();
     contacto();
     trabajos();
